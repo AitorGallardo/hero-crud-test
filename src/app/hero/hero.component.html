@@ -1,0 +1,22 @@
+
+<mat-form-field>
+  <mat-label>Enter your name</mat-label>
+  <input matInput placeholder="Your name">
+</mat-form-field>
+
+<mat-list role="list">
+  <mat-list-item *ngFor="let hero of heroes" role="listitem"
+    >
+    <div class="list-item-container">
+      <span>{{ hero?.name }}</span>
+      <span class="hero-actions" mat-list-item-secondary>
+        <button mat-icon-button aria-label="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" aria-label="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </span>
+    </div>
+  </mat-list-item>
+</mat-list>
