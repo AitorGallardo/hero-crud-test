@@ -5,6 +5,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogContentComponent } from './dialog-component/dialog-component.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import {
+  Observable,
+  debounceTime,
+  distinctUntilChanged,
+  of,
+  switchMap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-hero',
@@ -12,20 +20,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./hero.component.css'],
 })
 export class HeroComponent implements OnInit {
-  heroes: Hero[] = [];
-  hero = new Hero();
   private heroService = inject(HeroService);
   public dialog = inject(MatDialog);
   public snackBar = inject(MatSnackBar);
   public router = inject(Router);
 
+  heroes: Hero[] = [];
+  hero = new Hero();
 
+  searchField = new FormControl();
   inputPlaceHolder = 'Enter Hero Name';
 
   constructor() {}
 
   ngOnInit() {
     this.getAllHeroes();
+    this.initSearchInput().subscribe((value) => console.log('value', value));
   }
 
   getAllHeroes(): void {
@@ -35,8 +45,16 @@ export class HeroComponent implements OnInit {
     });
   }
 
-  goToDetail(hero: Hero): void {
-    this.router.navigate(['/detail', hero.id]);
+  initSearchInput() {
+    return this.searchField.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((value: string) => this.searchOptions(value))
+    );
+  }
+
+  searchOptions(value: string) {
+    return of(value);
   }
 
   openDialog(hero: Hero) {
@@ -54,8 +72,8 @@ export class HeroComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if(result) {
-        this.openSnackBar('The hero has been deleted!', 'Close')
+      if (result) {
+        this.openSnackBar('The hero has been deleted!', 'Close');
         // this.heroService.deleteHero(hero.id).subscribe(() => {
         //   this.heroes = this.heroes.filter((h) => h !== hero);
         // });
@@ -70,10 +88,10 @@ export class HeroComponent implements OnInit {
     });
   }
 
-  createHero(){
-    this.router.navigate(['/details',-1]);
+  createHero() {
+    this.router.navigate(['/details', -1]);
   }
-  editHero(heroId:number){
+  editHero(heroId: number) {
     this.router.navigate(['/details', heroId]);
   }
 }

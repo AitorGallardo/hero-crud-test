@@ -24,16 +24,19 @@ export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.id = params['id'] ? Number(params['id']) : -1;
-      if (this.id && this.id >= 0) {
-        this.getHero();
-        this.headerText = 'Edit Hero';
-      } else {
-        this.headerText = 'Create Hero';
-      }
+      this.initComponent(params);
     });
+  }
+
+  initComponent(params: { [key: string]: any }): void {
+    this.id = params['id'] ? Number(params['id']) : -1;
+    if (this.isEdit) {
+      this.getHero();
+      this.headerText = 'Edit Hero';
+    } else {
+      this.headerText = 'Create Hero';
+    }
     this.createForm();
-    this.getHero();
   }
 
   createForm(): void {
@@ -57,7 +60,7 @@ export class HeroDetailComponent implements OnInit {
 
   onSubmit(): void {
     const hero = { ...this.hero, ...this.heroForm.value };
-    if(this.id && this.id >= 0) {
+    if (this.id && this.id >= 0) {
     }
     this.heroService.updateHero(hero).subscribe(() => this.goBack());
   }
@@ -66,5 +69,10 @@ export class HeroDetailComponent implements OnInit {
     this.location.back();
   }
 
-  
+  get isEdit(): boolean {
+    return (this.id !== null && typeof this.id === 'number' && this.id >= 0);
+  } 
+
+
+
 }
