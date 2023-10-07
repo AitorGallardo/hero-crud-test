@@ -9,3 +9,13 @@ body {
   margin: 0 15%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.delete-dialog mat-dialog-container{
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.mat-simple-snackbar {
+  text-align: center !important;
+}

@@ -1,8 +1,14 @@
-
-<mat-form-field>
-  <mat-label>Enter your name</mat-label>
-  <input matInput placeholder="Your name">
-</mat-form-field>
+<section class="search-add-container">
+  <mat-form-field>
+    <mat-label>{{inputPlaceHolder}}</mat-label>
+    <input matInput placeholder="Your name">
+  </mat-form-field>
+  <div class="button-container">
+    <button (click)="createHero()" mat-icon-button color="primary" aria-label="Add">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</section>
 
 <mat-list role="list">
   <mat-list-item *ngFor="let hero of heroes" role="listitem"
@@ -10,10 +16,10 @@
     <div class="list-item-container">
       <span>{{ hero?.name }}</span>
       <span class="hero-actions" mat-list-item-secondary>
-        <button mat-icon-button aria-label="Edit">
+        <button mat-icon-button aria-label="Edit" (click)="editHero(hero.id)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" aria-label="Delete">
+        <button (click)="openDialog(hero)" mat-icon-button color="warn" aria-label="Delete">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

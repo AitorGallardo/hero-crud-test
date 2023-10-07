@@ -1,13 +1,31 @@
-:host{
-    width: 100%;
+:host {
+  width: 100%;
 }
 
-.list-item-container{
-    display: flex;
-    justify-content: space-between;
-  }
+.list-item-container {
+  display: flex;
+  justify-content: space-between;
+}
 
-  mat-list-item:hover {
-    background-color: #eee;
-    cursor: pointer;
-  }
+mat-list-item:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
+
+mat-form-field{
+  width: 90%;
+}
+
+.search-add-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.search-add-container mat-form-field{
+}
+
+.search-add-container .button-container{
+  display: flex;
+  justify-content: center;
+}

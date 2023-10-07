@@ -10,11 +10,11 @@ import { Hero } from './hero.model';
 export class HeroService {
   private heroesUrl = 'api/heroes';  // URL to web api
   private heroes: Hero[] = [
-    { id: 1, name: 'Spiderman' },
-    { id: 2, name: 'Iron Man' },
-    { id: 3, name: 'Captain America' },
-    { id: 4, name: 'Thor' },
-    { id: 5, name: 'Hulk' }
+    { id: 1, name: 'Spiderman', age: 25, power: 'Web-slinging' },
+    { id: 2, name: 'Iron Man', age: 40, power: 'Powered suit' },
+    { id: 3, name: 'Captain America', age: 100, power: 'Super soldier serum' },
+    { id: 4, name: 'Thor', age: 1000, power: 'God of Thunder' },
+    { id: 5, name: 'Hulk', age: 45, power: 'Superhuman strength' }
   ];
 
   constructor(private http: HttpClient) { }

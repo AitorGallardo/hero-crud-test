@@ -1,3 +1,4 @@
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeroDetailComponent } from './hero/hero-detail/hero-detail.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,9 +19,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { HttpClientModule } from '@angular/common/http';
+import { DialogContentComponent } from './hero/dialog-component/dialog-component.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [AppComponent, HeroComponent, HeroDetailComponent],
+  declarations: [AppComponent, HeroComponent, HeroDetailComponent, DialogContentComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -35,7 +38,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatCardModule,
     MatToolbarModule,
     MatListModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [HeroService],
   bootstrap: [AppComponent],
