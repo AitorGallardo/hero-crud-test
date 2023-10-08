@@ -11,6 +11,7 @@
 </section>
 
 <mat-list role="list">
+  <mat-spinner *ngIf="loadingService.isLoading" color="accent" diameter="50" mode="indeterminate"></mat-spinner>
   <mat-list-item *ngFor="let hero of heroes" role="listitem"
     >
     <div class="list-item-container">
@@ -19,7 +20,7 @@
         <button mat-icon-button aria-label="Edit" (click)="editHero(hero.id)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button (click)="openDialog(hero)" mat-icon-button color="warn" aria-label="Delete">
+        <button (click)="test()" mat-icon-button color="warn" aria-label="Delete">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

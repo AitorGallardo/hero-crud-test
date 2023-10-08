@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
-import { HeroService } from '../hero.service';
+import { HeroService } from '../../services/hero.service';
 import { Hero } from '../hero.model';
 
 @Component({

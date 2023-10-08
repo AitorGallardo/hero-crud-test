@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeroService } from './hero/hero.service';
+import { HeroService } from './services/hero.service';
 import { HeroComponent } from './hero/hero.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,9 +18,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DialogContentComponent } from './hero/dialog-component/dialog-component.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MockServerInterceptor } from './mock-server.interceptor';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingService } from './services/loading.service';
 
 @NgModule({
   declarations: [AppComponent, HeroComponent, HeroDetailComponent, DialogContentComponent],
@@ -40,9 +43,13 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatListModule,
     HttpClientModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
-  providers: [HeroService],
+  providers: [HeroService,
+    LoadingService,
+    { provide: HTTP_INTERCEPTORS, useClass: MockServerInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

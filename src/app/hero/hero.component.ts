@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Hero } from './hero.model';
-import { HeroService } from './hero.service';
+import { HeroService } from '../services/hero.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogContentComponent } from './dialog-component/dialog-component.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +13,8 @@ import {
   of,
   switchMap,
 } from 'rxjs';
+import { MockServerInterceptor } from '../mock-server.interceptor';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-hero',
@@ -24,6 +26,8 @@ export class HeroComponent implements OnInit {
   public dialog = inject(MatDialog);
   public snackBar = inject(MatSnackBar);
   public router = inject(Router);
+  public loadingService = inject(LoadingService);
+
 
   heroes: Hero[] = [];
   hero = new Hero();
@@ -34,13 +38,16 @@ export class HeroComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    console.log('interceptor', this.loadingService.isLoading)
     this.getAllHeroes();
     this.initSearchInput().subscribe((value) => console.log('value', value));
   }
 
   getAllHeroes(): void {
     this.heroService.getAllHeroes().subscribe((heroes) => {
+      console.log('heroes', heroes)
       this.heroes = heroes;
+      console.log('interceptor', this.loadingService.isLoading)
     });
   }
 
@@ -50,6 +57,10 @@ export class HeroComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((value: string) => this.searchOptions(value))
     );
+  }
+
+  test() {
+    this.heroService.fumateEsta();
   }
 
   searchOptions(value: string) {
@@ -88,7 +99,13 @@ export class HeroComponent implements OnInit {
   }
 
   createHero() {
-    this.router.navigate(['/details', -1]);
+    this.heroService.getHeroById(1).subscribe((hero) => {
+      // this.hero = hero;
+      // this.hero.id = -1;
+      // this.editHero(this.hero.id);
+    }
+    );
+    // this.router.navigate(['/details', -1]);
   }
   editHero(heroId: number) {
     this.router.navigate(['/details', heroId]);
