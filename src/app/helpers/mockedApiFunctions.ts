@@ -70,7 +70,7 @@ export const resolvePost = async (request: HttpRequest<any>) => {
   hero.id = Math.max(...heroes.map((h) => h.id)) + 1;
   heroes.push(hero);
   setHeroesToLocalStorage(heroes);
-  return heroes;
+  return hero;
 };
 
 // ==> Resolve PUT <==
@@ -80,7 +80,7 @@ export const resolvePut = async (request: HttpRequest<any>) => {
   const index = heroes.findIndex((h) => h.id === hero.id);
   heroes[index] = hero;
   setHeroesToLocalStorage(heroes);
-  return heroes;
+  return hero;
 };
 
 // ==> Resolve DELETE <==
@@ -89,5 +89,6 @@ export const resolveDelete = async (request: HttpRequest<any>) => {
   const id = Number(request.url.split('/').pop());
   const index = heroes.findIndex((h) => h.id === id);
   heroes.splice(index, 1);
-  return heroes;
+  setHeroesToLocalStorage(heroes);
+  return true;
 };

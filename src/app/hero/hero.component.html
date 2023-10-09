@@ -4,23 +4,25 @@
     <input matInput placeholder="Your name" [formControl]="searchField">
   </mat-form-field>
   <div class="button-container">
-    <button (click)="createHero()" mat-icon-button color="primary" aria-label="Add">
+    <button (click)="onCreateHero()" mat-icon-button color="primary" aria-label="Add">
       <mat-icon>add</mat-icon>
     </button>
   </div>
 </section>
 
 <mat-list role="list">
-  <mat-spinner *ngIf="loadingService.isLoading" color="accent" diameter="50" mode="indeterminate"></mat-spinner>
+  <div *ngIf="loadingService.isLoading" class="spinner-container">
+    <mat-spinner color="accent" diameter="50" mode="indeterminate"></mat-spinner>
+  </div>
   <mat-list-item *ngFor="let hero of heroes" role="listitem"
     >
     <div class="list-item-container">
       <span>{{ hero?.name }}</span>
       <span class="hero-actions" mat-list-item-secondary>
-        <button mat-icon-button aria-label="Edit" (click)="editHero(hero.id)">
+        <button mat-icon-button aria-label="Edit" (click)="onEditHero(hero.id)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button (click)="test()" mat-icon-button color="warn" aria-label="Delete">
+        <button (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

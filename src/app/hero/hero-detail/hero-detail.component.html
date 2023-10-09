@@ -1,14 +1,20 @@
 <h1>{{headerText}}</h1>
-<form [formGroup]="heroForm" (ngSubmit)="onSubmit()" class="hero-form">
+<div *ngIf="loadingService.isLoading" class="spinner-container">
+  <mat-spinner color="accent" diameter="50" mode="indeterminate"></mat-spinner>
+</div>
+<form *ngIf="!loadingService.isLoading" [formGroup]="heroForm" (ngSubmit)="onSubmit()" class="hero-form">
   <mat-form-field class="hero-form-field">
+    <mat-label>{{formLabels['name']}}</mat-label>
     <input matInput formControlName="name" placeholder="Name" class="hero-form-input" />
   </mat-form-field>
 
   <mat-form-field class="hero-form-field">
+    <mat-label>{{formLabels['age']}}</mat-label>
     <input matInput formControlName="age" placeholder="Age" class="hero-form-input" />
   </mat-form-field>
 
   <mat-form-field class="hero-form-field">
+    <mat-label>{{formLabels['power']}}</mat-label>
     <input matInput formControlName="power" placeholder="Power" class="hero-form-input" />
   </mat-form-field>
 

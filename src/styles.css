@@ -19,3 +19,10 @@ body {
 .mat-simple-snackbar {
   text-align: center !important;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

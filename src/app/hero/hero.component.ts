@@ -56,15 +56,19 @@ export class HeroComponent implements OnInit {
     );
   }
 
-  test() {
-    this.heroService.fumateEsta();
-  }
-
   searchOptions(value: string) {
     return of(value);
   }
 
-  openDialog(hero: Hero) {
+  onCreateHero() {
+    this.router.navigate(['/details']);
+
+  }
+  onEditHero(heroId: number) {
+    this.router.navigate(['/details', heroId]);
+  }
+
+  onDeleteHero(hero: Hero) {
     const title = 'Delete Hero';
     const message = 'Are you sure you want to delete this hero?';
     const dialogRef = this.dialog.open(DialogContentComponent, {
@@ -80,31 +84,21 @@ export class HeroComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.openSnackBar('The hero has been deleted!', 'Close');
-        // this.heroService.deleteHero(hero.id).subscribe(() => {
-        //   this.heroes = this.heroes.filter((h) => h !== hero);
-        // });
+        this.heroService.deleteHero(hero.id).subscribe((response) => {
+          if(response){
+            this.heroes = this.heroes.filter((h) => h !== hero);
+            this.openSnackBar('The hero has been deleted!', 'Close');
+          }
+        });
       }
-      console.log(`Dialog result: ${result}`);
     });
   }
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      // duration: 2000,
+      duration: 2000,
     });
   }
+  
 
-  createHero() {
-    this.heroService.getHeroById(1).subscribe((hero) => {
-      // this.hero = hero;
-      // this.hero.id = -1;
-      // this.editHero(this.hero.id);
-    }
-    );
-    // this.router.navigate(['/details', -1]);
-  }
-  editHero(heroId: number) {
-    this.router.navigate(['/details', heroId]);
-  }
 }
