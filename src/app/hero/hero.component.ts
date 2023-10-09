@@ -38,16 +38,13 @@ export class HeroComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log('interceptor', this.loadingService.isLoading)
     this.getAllHeroes();
     this.initSearchInput().subscribe((value) => console.log('value', value));
   }
 
   getAllHeroes(): void {
     this.heroService.getAllHeroes().subscribe((heroes) => {
-      console.log('heroes', heroes)
       this.heroes = heroes;
-      console.log('interceptor', this.loadingService.isLoading)
     });
   }
 

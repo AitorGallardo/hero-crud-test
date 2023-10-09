@@ -62,6 +62,7 @@ export class HeroService {
     return this.http.get<Hero[]>(this.heroesUrl).pipe(
       take(1),
       map((data) => {
+        console.log('que es esta  data',data);
         if (data && Array.isArray(data) && data.length > 0) {
           data.forEach((hero) => {
             hero = new Hero(hero);

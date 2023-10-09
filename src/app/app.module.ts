@@ -46,7 +46,8 @@ import { LoadingService } from './services/loading.service';
     MatSnackBarModule,
     MatProgressSpinnerModule
   ],
-  providers: [HeroService,
+  providers: [
+    HeroService,
     LoadingService,
     { provide: HTTP_INTERCEPTORS, useClass: MockServerInterceptor, multi: true }
   ],
