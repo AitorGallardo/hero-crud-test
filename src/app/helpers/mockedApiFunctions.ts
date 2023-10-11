@@ -1,8 +1,6 @@
-import { delay, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Hero } from '../hero/hero.model';
-import { HttpRequest, HttpEvent, HttpResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { HttpRequest} from '@angular/common/http';
 
 export const initHeroes = async (): Promise<Hero[]> => {
   let heroes = getHeroesFromLocalStorage();
@@ -34,15 +32,12 @@ export const resolveGet = async (request: HttpRequest<any>) => {
   const heroes = await initHeroes();
   if (request.params.has('id')) {
     const id = request.params.get('id');
-    const hero = resolveGetById(id, heroes);
-
-    return hero;
+    return resolveGetById(id, heroes);
   }
 
   if (request.params.has('name')) {
-    const name = request.params.get('name');
-    const heroArray = resolveGetByName(name, heroes);
-    return heroArray;
+    const name = request.params.get('name') ?? '';
+    return resolveGetByName(name, heroes);
   }
   return heroes;
 };
@@ -57,10 +52,14 @@ export const resolveGetById = (
 
 // By Name
 export const resolveGetByName = (
-  name: string | null,
+  name: string ,
   heroes: Hero[]
 ): Hero[] | undefined => {
-  return heroes.filter((hero) => hero.name === name);
+  const searchName = name.toLowerCase();
+  return heroes.filter((hero) => {
+    const heroName = hero.name.toLowerCase();
+    return heroName.includes(searchName);
+  });
 };
 
 // ==> Resolve POST <==

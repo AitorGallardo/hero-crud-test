@@ -21,7 +21,7 @@ export class HeroService {
       map((data) => {
         const heroes: Hero[] = [];
 
-        if (data && Array.isArray(data) && data.length > 0) {
+        if (this.isDataValid(data)) {
           data.forEach((hero) => {
             hero = new Hero(hero);
             heroes.push(hero);
@@ -61,7 +61,7 @@ export class HeroService {
       take(1),
       map((data) => {
         const heroes: Hero[] = [];
-        if (data && Array.isArray(data) && data.length > 0) {
+        if (this.isDataValid(data)) {
           data.forEach((hero) => {
             hero = new Hero(hero);
             heroes.push(hero);
@@ -128,5 +128,10 @@ export class HeroService {
 
       return of(result as T);
     };
+  }
+
+
+  private isDataValid(data: any): data is Hero[] {
+    return data && Array.isArray(data) && data.length > 0;
   }
 }

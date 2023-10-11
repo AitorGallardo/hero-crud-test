@@ -11,7 +11,7 @@
 </section>
 
 <mat-list role="list">
-  <div *ngIf="loadingService.isLoading" class="spinner-container">
+  <div *ngIf="isShowingListSpinner" class="spinner-container">
     <mat-spinner color="accent" diameter="50" mode="indeterminate"></mat-spinner>
   </div>
   <mat-list-item *ngFor="let hero of heroes" role="listitem"
@@ -23,10 +23,10 @@
           <mat-icon>edit</mat-icon>
         </button>
         <ng-container>
-          <div class="inline-spinner"  *ngIf="loadingService.isLoading&&deletingHeroId===hero?.id">
+          <div class="inline-spinner"  *ngIf="isShowingSpinnerOnDelete(hero)">
             <mat-spinner color="accent" diameter="20" mode="indeterminate"></mat-spinner>
           </div>
-          <button *ngIf="!loadingService.isLoading||deletingHeroId!==hero?.id" (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
+          <button *ngIf="isShowingDeleteIcon(hero)" (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
             <mat-icon>delete</mat-icon>
           </button>
         </ng-container>

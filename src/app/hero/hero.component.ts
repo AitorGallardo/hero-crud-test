@@ -28,7 +28,6 @@ export class HeroComponent implements OnInit {
   public router = inject(Router);
   public loadingService = inject(LoadingService);
 
-
   heroes: Hero[] = [];
   hero = new Hero();
   deletingHeroId: number = -1;
@@ -40,7 +39,9 @@ export class HeroComponent implements OnInit {
 
   ngOnInit() {
     this.getAllHeroes();
-    this.initSearchInput().subscribe((value) => console.log('value', value));
+    this.initSearchInput().subscribe(
+      (filteredHeroes) => (this.heroes = filteredHeroes)
+    );
   }
 
   getAllHeroes(): void {
@@ -53,8 +54,12 @@ export class HeroComponent implements OnInit {
     return this.searchField.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap((value: string) => this.searchOptions(value))
+      switchMap((value: string) => this.getGetByName(value))
     );
+  }
+
+  getGetByName(name: string): Observable<Hero[]> {
+    return this.heroService.getHeroesByName(name);
   }
 
   searchOptions(value: string) {
@@ -63,7 +68,6 @@ export class HeroComponent implements OnInit {
 
   onCreateHero() {
     this.router.navigate(['/details']);
-
   }
   onEditHero(heroId: number) {
     this.router.navigate(['/details', heroId]);
@@ -87,7 +91,7 @@ export class HeroComponent implements OnInit {
       if (result) {
         this.deletingHeroId = hero.id;
         this.heroService.deleteHero(hero.id).subscribe((response) => {
-          if(response){
+          if (response) {
             this.heroes = this.heroes.filter((h) => h !== hero);
             this.deletingHeroId = -1;
             this.openSnackBar('The hero has been deleted!', 'Close');
@@ -102,6 +106,15 @@ export class HeroComponent implements OnInit {
       duration: 2000,
     });
   }
-  
 
+  isShowingDeleteIcon(hero: Hero): boolean {
+    return !this.loadingService.isLoading || this.deletingHeroId !== hero?.id;
+  }
+  isShowingSpinnerOnDelete(hero: Hero): boolean {
+    return this.loadingService.isLoading || this.deletingHeroId === hero?.id;
+  }
+
+  get isShowingListSpinner(): boolean {
+    return this.loadingService.isLoading&&this.deletingHeroId===-1
+  }
 }
