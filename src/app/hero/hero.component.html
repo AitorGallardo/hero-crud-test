@@ -17,14 +17,19 @@
   <mat-list-item *ngFor="let hero of heroes" role="listitem"
     >
     <div class="list-item-container">
-      <span>{{ hero?.name }}</span>
+      <span class="list-item-name">{{ hero?.name }}</span>
       <span class="hero-actions" mat-list-item-secondary>
         <button mat-icon-button aria-label="Edit" (click)="onEditHero(hero.id)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <ng-container>
+          <div class="inline-spinner"  *ngIf="loadingService.isLoading&&deletingHeroId===hero?.id">
+            <mat-spinner color="accent" diameter="20" mode="indeterminate"></mat-spinner>
+          </div>
+          <button *ngIf="!loadingService.isLoading||deletingHeroId!==hero?.id" (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </ng-container>
       </span>
     </div>
   </mat-list-item>

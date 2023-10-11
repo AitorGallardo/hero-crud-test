@@ -29,3 +29,19 @@ mat-form-field{
   display: flex;
   justify-content: center;
 }
+
+.hero-actions{
+  display: flex;
+  align-items: center;
+  min-width: 100px;
+}
+
+.inline-spinner{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.list-item-name{
+  display: flex;
+  align-items: center;
+}

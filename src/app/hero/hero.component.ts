@@ -31,6 +31,7 @@ export class HeroComponent implements OnInit {
 
   heroes: Hero[] = [];
   hero = new Hero();
+  deletingHeroId: number = -1;
 
   searchField = new FormControl();
   inputPlaceHolder = 'Enter Hero Name';
@@ -84,9 +85,11 @@ export class HeroComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        this.deletingHeroId = hero.id;
         this.heroService.deleteHero(hero.id).subscribe((response) => {
           if(response){
             this.heroes = this.heroes.filter((h) => h !== hero);
+            this.deletingHeroId = -1;
             this.openSnackBar('The hero has been deleted!', 'Close');
           }
         });

@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { HeroService } from '../../services/hero.service';
 import { Hero } from '../hero.model';
 import { LoadingService } from 'src/app/services/loading.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-hero-detail',
@@ -19,6 +20,7 @@ export class HeroDetailComponent implements OnInit {
   private heroService = inject(HeroService);
   private location = inject(Location);
   public loadingService = inject(LoadingService);
+  public snackBar = inject(MatSnackBar);
 
   id: number = -1;
   headerText = 'Hero Details';
@@ -69,11 +71,21 @@ export class HeroDetailComponent implements OnInit {
 
   onSubmit(): void {
     const hero = { ...this.hero, ...this.heroForm.value };
+    if(!this.heroForm.valid) {
+      this.openSnackBar('Invalid Form', 'Close');
+      return;
+    }
     if (this.id && this.id >= 0) {
       this.heroService.updateHero(hero).subscribe(() => this.goBack());
     }else{
       this.heroService.createHero(hero).subscribe(() => this.goBack());
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   goBack(): void {
