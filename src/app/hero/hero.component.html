@@ -34,3 +34,12 @@
     </div>
   </mat-list-item>
 </mat-list>
+
+<mat-paginator #paginator
+               class="demo-paginator"
+               (page)="handlePageEvent($event)"
+               [length]="length"
+               [pageSize]="pageSize"
+               [pageIndex]="pageIndex"
+               aria-label="Select page">
+</mat-paginator>

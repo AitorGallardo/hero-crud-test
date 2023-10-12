@@ -13,8 +13,8 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-import { MockServerInterceptor } from '../mock-server.interceptor';
 import { LoadingService } from '../services/loading.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-hero',
@@ -35,18 +35,28 @@ export class HeroComponent implements OnInit {
   searchField = new FormControl();
   inputPlaceHolder = 'Enter Hero Name';
 
+  pageEvent!: PageEvent;
+  length = 0;
+  pageSize = 10;
+  pageIndex = 0;
+
   constructor() {}
 
   ngOnInit() {
     this.getAllHeroes();
     this.initSearchInput().subscribe(
-      (filteredHeroes) => (this.heroes = filteredHeroes)
+      (filteredHeroes) => {
+        this.heroes = filteredHeroes
+        this.length = this.heroes.length;
+          }
     );
   }
 
   getAllHeroes(): void {
     this.heroService.getAllHeroes().subscribe((heroes) => {
       this.heroes = heroes;
+      this.length = this.heroes.length;
+
     });
   }
 
@@ -116,5 +126,12 @@ export class HeroComponent implements OnInit {
 
   get isShowingListSpinner(): boolean {
     return this.loadingService.isLoading&&this.deletingHeroId===-1
+  }
+
+  handlePageEvent(e: PageEvent) {
+    this.pageEvent = e;
+    this.length = e.length;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
   }
 }
