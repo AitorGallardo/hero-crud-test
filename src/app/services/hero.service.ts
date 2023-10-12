@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, delay, map, take, tap } from 'rxjs/operators';
 import { Hero } from '../hero/hero.model';
 import { environment } from 'src/environments/environment';
-import { ResponseGetByPage } from '../helpers/mockedApiFunctions';
+import { ResponseDelete, ResponseGetByPage } from '../helpers/mockedApiFunctions';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class HeroService {
 
   /** GET heroes by page */
   getHeroesByPage(page: number, itemsPerPage = 10): Observable<{heroes: Hero[], total: number}> {
-    const offset = (page - 1) * itemsPerPage;
+    const offset = page * itemsPerPage;
 
     let params = new HttpParams();
     params = params.set('offset', offset);
@@ -45,7 +45,6 @@ export class HeroService {
       map((data) => {
         const heroes: Hero[] = [];
         const {heroes:heroesData, total} = data;
-        console.log('que es la data',data);
         if (this.isDataValid(heroesData)) {
           heroesData.forEach((hero) => {
             hero = new Hero(hero);
@@ -125,14 +124,14 @@ export class HeroService {
   }
 
   /** DELETE: delete the hero from the server */
-  deleteHero(hero: Hero | number): Observable<boolean> {
+  deleteHero(hero: Hero | number): Observable<ResponseDelete> {
     const id = typeof hero === 'number' ? hero : hero.id;
     const url = `${this.heroesUrl}/${id}`;
 
-    return this.http.delete<Hero>(url).pipe(
+    return this.http.delete<ResponseDelete>(url).pipe(
       take(1),
-      map((response) => {
-        return response;
+      map((data) => {
+        return data;
       }),
       catchError(this.handleError<any>('deleteHero'))
     );

@@ -1,12 +1,17 @@
 import { environment } from 'src/environments/environment';
 import { Hero } from '../hero/hero.model';
-import { HttpRequest} from '@angular/common/http';
+import { HttpRequest } from '@angular/common/http';
 
 export type ResponseGetByPage = {
   heroes: Hero[];
   total: number;
   page: number;
   itemsPerPage: number;
+};
+
+export type ResponseDelete = {
+  sucess: boolean;
+  total: number;
 };
 
 export const initHeroes = async (): Promise<Hero[]> => {
@@ -48,9 +53,13 @@ export const resolveGet = async (request: HttpRequest<any>) => {
   }
 
   if (request.params.has('offset') && request.params.has('itemsPerPage')) {
-    const offset = request.params.get('offset') ?  Number(request.params.get('offset')) : 0;
-    const itemsPerPage = request.params.get('itemsPerPage') ? Number(request.params.get('itemsPerPage')) : 0;
-    return resolveGetByPage(offset, itemsPerPage,heroes);
+    const offset = request.params.get('offset')
+      ? Number(request.params.get('offset'))
+      : 0;
+    const itemsPerPage = request.params.get('itemsPerPage')
+      ? Number(request.params.get('itemsPerPage'))
+      : 0;
+    return resolveGetByPage(offset, itemsPerPage, heroes);
   }
   return heroes;
 };
@@ -65,7 +74,7 @@ export const resolveGetById = (
 
 // By Name
 export const resolveGetByName = (
-  name: string ,
+  name: string,
   heroes: Hero[]
 ): Hero[] | undefined => {
   const searchName = name.toLowerCase();
@@ -77,11 +86,10 @@ export const resolveGetByName = (
 
 // By Page
 export const resolveGetByPage = (
-  offset: number ,
-  itemsPerPage: number ,
+  offset: number,
+  itemsPerPage: number,
   heroes: Hero[]
 ): ResponseGetByPage | undefined => {
-
   const startIndex = offset;
   const endIndex = startIndex + itemsPerPage;
 
@@ -98,8 +106,7 @@ export const resolveGetByPage = (
     total: heroes.length,
     page: offset,
     itemsPerPage: itemsPerPage,
-  }
-
+  };
 };
 
 // ==> Resolve POST <==
@@ -123,11 +130,14 @@ export const resolvePut = async (request: HttpRequest<any>) => {
 };
 
 // ==> Resolve DELETE <==
-export const resolveDelete = async (request: HttpRequest<any>) => {
+export const resolveDelete = async (request: HttpRequest<any>):Promise<ResponseDelete> => {
   const heroes = await initHeroes();
   const id = Number(request.url.split('/').pop());
   const index = heroes.findIndex((h) => h.id === id);
   heroes.splice(index, 1);
   setHeroesToLocalStorage(heroes);
-  return true;
+  return {
+    sucess: true,
+    total: heroes.length,
+  };
 };

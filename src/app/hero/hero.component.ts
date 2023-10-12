@@ -43,10 +43,9 @@ export class HeroComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.getAllHeroes();
+    this.getHeroesByPage();
     this.initSearchInput().subscribe((filteredHeroes) => {
       this.heroes = filteredHeroes;
-      this.length = this.heroes.length;
     });
   }
 
@@ -57,20 +56,18 @@ export class HeroComponent implements OnInit {
     });
   }
 
-  initSearchInput() {
-    return this.searchField.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((value: string) => this.getGetByName(value))
-    );
-  }
 
-  getGetByName(name: string): Observable<Hero[]> {
+  getHeroesByName(name: string): Observable<Hero[]> {
     return this.heroService.getHeroesByName(name);
   }
 
-  searchOptions(value: string) {
-    return of(value);
+  getHeroesByPage() {
+    this.heroService
+      .getHeroesByPage(this.pageIndex, this.pageSize)
+      .subscribe(({heroes,total}) => {
+        this.heroes = heroes;
+        this.length = total;
+      });
   }
 
   onCreateHero() {
@@ -97,10 +94,11 @@ export class HeroComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.deletingHeroId = hero.id;
-        this.heroService.deleteHero(hero.id).subscribe((response) => {
-          if (response) {
+        this.heroService.deleteHero(hero.id).subscribe(({sucess,total}) => {
+          if (sucess) {
             this.heroes = this.heroes.filter((h) => h !== hero);
             this.deletingHeroId = -1;
+            this.length = total;
             this.openSnackBar('The hero has been deleted!', 'Close');
           }
         });
@@ -125,14 +123,20 @@ export class HeroComponent implements OnInit {
     return this.loadingService.isLoading && this.deletingHeroId === -1;
   }
 
+
+  initSearchInput() {
+    return this.searchField.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((value: string) => this.getHeroesByName(value))
+    );
+  }
+
   handlePageEvent(e: PageEvent) {
     this.pageEvent = e;
     this.length = e.length;
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
-    this.heroService.getHeroesByPage(this.pageIndex, this.pageSize).subscribe((heroes) => {
-      console.log('heroes by page',heroes);
-    }
-    );
+    this.getHeroesByPage();
   }
 }
