@@ -4,13 +4,13 @@ import { Observable, of } from 'rxjs';
 import { catchError, delay, map, take, tap } from 'rxjs/operators';
 import { Hero } from '../hero/hero.model';
 import { environment } from 'src/environments/environment';
+import { ResponseGetByPage } from '../helpers/mockedApiFunctions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HeroService {
   private heroesUrl = environment.heroUrl; // URL to web api
-
 
   constructor(private http: HttpClient) {}
 
@@ -28,6 +28,34 @@ export class HeroService {
           });
         }
         return heroes;
+      })
+    );
+  }
+
+  /** GET heroes by page */
+  getHeroesByPage(page: number, itemsPerPage = 10): Observable<{heroes: Hero[], total: number}> {
+    const offset = (page - 1) * itemsPerPage;
+
+    let params = new HttpParams();
+    params = params.set('offset', offset);
+    params = params.set('itemsPerPage', itemsPerPage);
+
+    return this.http.get<ResponseGetByPage>(this.heroesUrl, { params }).pipe(
+      take(1),
+      map((data) => {
+        const heroes: Hero[] = [];
+        const {heroes:heroesData, total} = data;
+        console.log('que es la data',data);
+        if (this.isDataValid(heroesData)) {
+          heroesData.forEach((hero) => {
+            hero = new Hero(hero);
+            heroes.push(hero);
+          });
+        }
+        return {
+          heroes,
+          total
+        }
       })
     );
   }
@@ -74,30 +102,26 @@ export class HeroService {
 
   /** CREATE: update the hero on the server */
   createHero(hero: Hero): Observable<any> {
-    return this.http
-      .post(this.heroesUrl, hero)
-      .pipe(
-        take(1),
-        map((hero) => {
-          hero = new Hero(hero);
-          return hero;
-        }),
-        catchError(this.handleError<any>('createHero'))
-      );
+    return this.http.post(this.heroesUrl, hero).pipe(
+      take(1),
+      map((hero) => {
+        hero = new Hero(hero);
+        return hero;
+      }),
+      catchError(this.handleError<any>('createHero'))
+    );
   }
 
   /** PUT: update the hero on the server */
   updateHero(hero: Hero): Observable<any> {
-    return this.http
-      .put(this.heroesUrl, hero)
-      .pipe(
-        take(1),
-        map((hero) => {
-          hero = new Hero(hero);
-          return hero;
-        }),
-        catchError(this.handleError<any>('updateHero'))
-      );
+    return this.http.put(this.heroesUrl, hero).pipe(
+      take(1),
+      map((hero) => {
+        hero = new Hero(hero);
+        return hero;
+      }),
+      catchError(this.handleError<any>('updateHero'))
+    );
   }
 
   /** DELETE: delete the hero from the server */
@@ -105,15 +129,13 @@ export class HeroService {
     const id = typeof hero === 'number' ? hero : hero.id;
     const url = `${this.heroesUrl}/${id}`;
 
-    return this.http
-      .delete<Hero>(url)
-      .pipe(
-        take(1),
-        map((response) => {
-          return response;
-        }),
-        catchError(this.handleError<any>('deleteHero'))
-      );
+    return this.http.delete<Hero>(url).pipe(
+      take(1),
+      map((response) => {
+        return response;
+      }),
+      catchError(this.handleError<any>('deleteHero'))
+    );
   }
 
   /**
@@ -129,7 +151,6 @@ export class HeroService {
       return of(result as T);
     };
   }
-
 
   private isDataValid(data: any): data is Hero[] {
     return data && Array.isArray(data) && data.length > 0;
