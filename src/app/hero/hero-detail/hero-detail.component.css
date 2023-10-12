@@ -1,30 +1,49 @@
 .hero-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .hero-form-field {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 16px;
-  }
-  
-  .hero-form-input {
-    font-size: 16px;
-    padding: 8px;
-  }
-  
-  .hero-form-button {
-    margin-top: 16px;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  :host{
-    width: 100%;
-  }
-  h1{
-    text-align: center;
-    font-size: 42px;
-    margin-bottom: 60px;
-  }
+.hero-form-field {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.hero-form-input {
+  font-size: 16px;
+  padding: 8px;
+}
+
+.hero-form-button {
+  margin-top: 16px;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+main{
+  width: 100%;
+}
+header {
+  margin-bottom: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.icon-back {
+  cursor: pointer;
+  font-size: 32px;
+}
+h1 {
+  flex: 1;
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 60px;
+}
