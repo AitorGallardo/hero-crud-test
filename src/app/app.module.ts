@@ -28,10 +28,11 @@ import { HeroService } from './services/hero.service';
 import { HeroDetailComponent } from './hero/hero-detail/hero-detail.component';
 import { HeroComponent } from './hero/hero.component';
 import { DialogContentComponent } from './hero/dialog-component/dialog-component.component';
+import { UppercaseDirective } from './directives/uppercase.directive';
 
 
 @NgModule({
-  declarations: [AppComponent, HeroComponent, HeroDetailComponent, DialogContentComponent],
+  declarations: [AppComponent, HeroComponent, HeroDetailComponent, DialogContentComponent,UppercaseDirective],
   imports: [
     BrowserModule,
     AppRoutingModule,

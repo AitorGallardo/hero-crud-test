@@ -2,7 +2,7 @@
   <section class="search-add-container">
     <mat-form-field>
       <mat-label>{{inputPlaceHolder}}</mat-label>
-      <input matInput placeholder="Your name" [formControl]="searchField">
+      <input matInput appUppercase placeholder="Your name" [formControl]="searchField">
     </mat-form-field>
     <div class="button-container">
       <button (click)="onCreateHero()" mat-icon-button color="primary" aria-label="Add">
