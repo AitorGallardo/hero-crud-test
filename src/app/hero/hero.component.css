@@ -14,9 +14,14 @@ mat-list{
   min-height: 50%;
 }
 
-mat-list-item:hover {
-  background-color: #eee;
-  cursor: pointer;
+
+
+mat-list-item:hover, mat-list-item:nth-child(odd):hover {
+  background-color: #e0dfdf;
+}
+
+mat-list-item:nth-child(odd) {
+  background-color: #f2f2f2;
 }
 
 mat-form-field {

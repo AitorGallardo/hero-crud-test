@@ -15,7 +15,8 @@
     <div *ngIf="isShowingListSpinner" class="spinner-container">
       <mat-spinner color="accent" diameter="50" mode="indeterminate"></mat-spinner>
     </div>
-    <mat-list-item *ngFor="let hero of heroes" role="listitem"
+    <ng-container *ngIf="!isShowingListSpinner">
+      <mat-list-item *ngFor="let hero of heroes" role="listitem"
       >
       <div class="list-item-container">
         <span class="list-item-name">{{ hero?.name }}</span>
@@ -34,6 +35,7 @@
         </span>
       </div>
     </mat-list-item>
+    </ng-container>
   </mat-list>
 </main>
 

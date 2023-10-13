@@ -118,7 +118,7 @@ export class HeroComponent implements OnInit {
     return !this.loadingService.isLoading || this.deletingHeroId !== hero?.id;
   }
   isShowingSpinnerOnDelete(hero: Hero): boolean {
-    return this.loadingService.isLoading || this.deletingHeroId === hero?.id;
+    return this.loadingService.isLoading && this.deletingHeroId === hero?.id;
   }
 
   get isShowingListSpinner(): boolean {
