@@ -41,7 +41,6 @@ export class HeroService {
     itemsPerPage = 10
   ): Observable<{ heroes: Hero[]; total: number }> {
     const offset = page * itemsPerPage;
-
     let params = new HttpParams();
     params = params.set('offset', offset);
     params = params.set('itemsPerPage', itemsPerPage);

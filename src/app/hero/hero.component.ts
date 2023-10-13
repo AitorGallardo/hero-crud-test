@@ -7,11 +7,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import {
+  BehaviorSubject,
   Observable,
   debounceTime,
   distinctUntilChanged,
-  of,
-  startWith,
   switchMap,
 } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
@@ -36,40 +35,31 @@ export class HeroComponent implements OnInit {
   searchField = new FormControl();
   inputPlaceHolder = 'Enter Hero Name';
 
-  pageEvent!: PageEvent;
   length = 0;
   pageSize = 10;
   pageIndex = 0;
 
+  onPagination$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(
+    new PageEvent()
+  );
+
   constructor() {}
 
   ngOnInit() {
-    this.getHeroesByPage();
-    this.initSearchInput().subscribe(({heroes,total}) => {
-      this.heroes = heroes;
-      this.length = total;
+    this.initPagination().subscribe((data) => {
+      this.initData(data);
+    });
+
+    this.initSearchInput().subscribe((data) => {
+      this.initData(data);
     });
   }
 
-  getAllHeroes(): void {
-    this.heroService.getAllHeroes().subscribe((heroes) => {
-      this.heroes = heroes;
-      this.length = this.heroes.length;
-    });
+  getHeroesByName(name: string): Observable<{ heroes: Hero[]; total: number }> {
+    return this.heroService.getHeroesByName(name, 0, this.pageSize);
   }
-
-
-  getHeroesByName(name: string): Observable<{heroes: Hero[], total: number}> {
-    return this.heroService.getHeroesByName(name,0,this.pageSize);
-  }
-
-  getHeroesByPage() {
-    this.heroService
-      .getHeroesByPage(this.pageIndex, this.pageSize)
-      .subscribe(({heroes,total}) => {
-        this.heroes = heroes;
-        this.length = total;
-      });
+  getHeroesByPage(): Observable<{ heroes: Hero[]; total: number }> {
+    return this.heroService.getHeroesByPage(this.pageIndex, this.pageSize);
   }
 
   onCreateHero() {
@@ -96,7 +86,7 @@ export class HeroComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.deletingHeroId = hero.id;
-        this.heroService.deleteHero(hero.id).subscribe(({sucess,total}) => {
+        this.heroService.deleteHero(hero.id).subscribe(({ sucess, total }) => {
           if (sucess) {
             this.heroes = this.heroes.filter((h) => h !== hero);
             this.deletingHeroId = -1;
@@ -125,21 +115,37 @@ export class HeroComponent implements OnInit {
     return this.loadingService.isLoading && this.deletingHeroId === -1;
   }
 
-
   initSearchInput() {
     return this.searchField.valueChanges.pipe(
       debounceTime(400),
-      // startWith(''),
       distinctUntilChanged(),
       switchMap((value: string) => this.getHeroesByName(value))
     );
   }
 
+  initPagination() {
+    return this.onPagination$.pipe(
+      switchMap((e: PageEvent) => {
+        this.handlePageEvent(e);
+        return this.getHeroesByPage();
+      })
+    );
+  }
+
   handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
-    this.getHeroesByPage();
+    if (e && Object.keys(e).length > 0) {
+      this.length = e.length;
+      this.pageSize = e.pageSize;
+      this.pageIndex = e.pageIndex;
+    }
+  }
+  onPaginationChange(e: PageEvent) {
+    this.onPagination$.next(e);
+  }
+
+  initData(data: { heroes: Hero[]; total: number }) {
+    const { heroes, total } = data;
+    this.heroes = heroes;
+    this.length = total;
   }
 }
