@@ -1,27 +1,61 @@
-# HeroCrudTest
+# Superhero SPA
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.4.
+This project is a technical challenge to build a Single Page Application (SPA) for superhero management using Angular and TypeScript.
 
-## Development server
+## Requirements
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Development Environment
 
-## Code scaffolding
+Make sure you are using the latest LTS version of Angular, TypeScript, and any libraries in this project.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Functionality
 
-## Build
+The application should allow you to perform maintenance tasks on superheroes. To achieve this, follow these guidelines:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+#### Service
 
-## Running unit tests
+1. Create a service responsible for superhero data. This service should:
+   - Retrieve all superheroes.
+   - Retrieve a superhero by their ID.
+   - Retrieve superheroes whose names contain a specified parameter. For example, if you send "man," it should return "Spiderman," "Superman," "Manolito el fuerte," and so on.
+   - Modify superhero data.
+   - Delete a superhero.
+   - Include unit tests for the service (optional).
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+#### Component
 
-## Running end-to-end tests
+2. Create a component that interacts with the service and provides the following features:
+   - Display a paginated list of heroes, including buttons for adding, editing, and deleting.
+   - Show an input field above the paginated list to filter superheroes by name.
+   - When the "Add" button is pressed, an empty form with suitable validations should be generated. After adding a new hero, the paginated list should be displayed again.
+   - When the "Edit" button is pressed, a form with the selected hero's data should appear, allowing you to modify their information. Once edited, you should return to the paginated list.
+   - When the "Delete" button is pressed, a confirmation prompt should appear. Upon confirmation, the hero should be deleted.
+   - Include unit tests for the component (optional).
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Important Notes
 
-## Further help
+- Superhero data should be stored within the service, and there is no need for a backend.
+- Your solutions for each point, data model, and code formatting will be evaluated.
+- Present your test results in a Git repository (publication not required).
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Optional Improvements
+
+You can consider the following optional improvements to enhance your application:
+
+- Use Angular Material for a better visual experience.
+- Implement routing and page navigation.
+- Dockerize the application.
+- Create an interceptor to show a loading element during operations such as deletion or editing.
+- Develop a directive to ensure the hero's name is always displayed in uppercase in the name text box.
+- Explore the use of a mock server for simulating HTTP calls without a backend.
+- Implement event-driven communication between components.
+
+## Evaluation Criteria
+
+Your project will be assessed based on:
+
+- Data model construction.
+- Use of reactive programming.
+- Readable code using lambdas.
+
+Good luck with your superhero maintenance SPA!
