@@ -39,6 +39,17 @@ export const setHeroesToLocalStorage = (heroes: Hero[]): void => {
   localStorage.setItem('heroes', JSON.stringify(heroes));
 };
 
+export const getPaginationParams = (request: HttpRequest<any>) => {
+  const offset = request.params.get('offset')
+    ? Number(request.params.get('offset'))
+    : 0;
+  const itemsPerPage = request.params.get('itemsPerPage')
+    ? Number(request.params.get('itemsPerPage'))
+    : 0;
+
+    return {offset,itemsPerPage}
+};
+
 // ==> Resolve GET <==
 export const resolveGet = async (request: HttpRequest<any>) => {
   const heroes = await initHeroes();
@@ -49,16 +60,12 @@ export const resolveGet = async (request: HttpRequest<any>) => {
 
   if (request.params.has('name')) {
     const name = request.params.get('name') ?? '';
-    return resolveGetByName(name, heroes);
+    const {offset,itemsPerPage} = getPaginationParams(request)
+    return resolveGetByName(name, offset, itemsPerPage, heroes);
   }
 
   if (request.params.has('offset') && request.params.has('itemsPerPage')) {
-    const offset = request.params.get('offset')
-      ? Number(request.params.get('offset'))
-      : 0;
-    const itemsPerPage = request.params.get('itemsPerPage')
-      ? Number(request.params.get('itemsPerPage'))
-      : 0;
+    const {offset,itemsPerPage} = getPaginationParams(request)
     return resolveGetByPage(offset, itemsPerPage, heroes);
   }
   return heroes;
@@ -75,13 +82,20 @@ export const resolveGetById = (
 // By Name
 export const resolveGetByName = (
   name: string,
+  offset: number,
+  itemsPerPage: number,
   heroes: Hero[]
-): Hero[] | undefined => {
-  const searchName = name.toLowerCase();
-  return heroes.filter((hero) => {
+): ResponseGetByPage | undefined => {
+
+  if(name.length === 0) return resolveGetByPage(offset, itemsPerPage, heroes);
+
+  const searchName = name.toLowerCase().trim();
+  const filteredHeroes = heroes.filter((hero) => {
     const heroName = hero.name.toLowerCase();
     return heroName.includes(searchName);
   });
+
+  return resolveGetByPage(offset, itemsPerPage, filteredHeroes);
 };
 
 // By Page
@@ -95,7 +109,12 @@ export const resolveGetByPage = (
 
   // Check if the start index is out of bounds
   if (startIndex >= heroes.length) {
-    return;
+    return {
+      heroes,
+      total: heroes.length,
+      page: offset,
+      itemsPerPage: itemsPerPage,
+    };
   }
 
   // Slice the baseList to get the items for the requested page
@@ -130,7 +149,9 @@ export const resolvePut = async (request: HttpRequest<any>) => {
 };
 
 // ==> Resolve DELETE <==
-export const resolveDelete = async (request: HttpRequest<any>):Promise<ResponseDelete> => {
+export const resolveDelete = async (
+  request: HttpRequest<any>
+): Promise<ResponseDelete> => {
   const heroes = await initHeroes();
   const id = Number(request.url.split('/').pop());
   const index = heroes.findIndex((h) => h.id === id);

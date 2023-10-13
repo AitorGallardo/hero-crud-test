@@ -4,7 +4,10 @@ import { Observable, of } from 'rxjs';
 import { catchError, delay, map, take, tap } from 'rxjs/operators';
 import { Hero } from '../hero/hero.model';
 import { environment } from 'src/environments/environment';
-import { ResponseDelete, ResponseGetByPage } from '../helpers/mockedApiFunctions';
+import {
+  ResponseDelete,
+  ResponseGetByPage,
+} from '../helpers/mockedApiFunctions';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +36,10 @@ export class HeroService {
   }
 
   /** GET heroes by page */
-  getHeroesByPage(page: number, itemsPerPage = 10): Observable<{heroes: Hero[], total: number}> {
+  getHeroesByPage(
+    page: number,
+    itemsPerPage = 10
+  ): Observable<{ heroes: Hero[]; total: number }> {
     const offset = page * itemsPerPage;
 
     let params = new HttpParams();
@@ -44,7 +50,7 @@ export class HeroService {
       take(1),
       map((data) => {
         const heroes: Hero[] = [];
-        const {heroes:heroesData, total} = data;
+        const { heroes: heroesData, total } = data;
         if (this.isDataValid(heroesData)) {
           heroesData.forEach((hero) => {
             hero = new Hero(hero);
@@ -53,8 +59,8 @@ export class HeroService {
         }
         return {
           heroes,
-          total
-        }
+          total,
+        };
       })
     );
   }
@@ -78,23 +84,32 @@ export class HeroService {
   }
 
   /** GET hero by name */
-  getHeroesByName(name: string): Observable<Hero[]> {
+  getHeroesByName(
+    name: string,
+    page: number,
+    itemsPerPage = 10
+  ): Observable<{ heroes: Hero[]; total: number }> {
+    const offset = page * itemsPerPage;
     let params = new HttpParams();
-    if (name) {
-      params = params.set('name', name);
-    }
+    params = params.set('name', name);
+    params = params.set('offset', offset);
+    params = params.set('itemsPerPage', itemsPerPage);
     // const url = `${this.heroesUrl}/?name=${name}`;
-    return this.http.get<Hero[]>(this.heroesUrl, { params }).pipe(
+    return this.http.get<ResponseGetByPage>(this.heroesUrl, { params }).pipe(
       take(1),
       map((data) => {
         const heroes: Hero[] = [];
-        if (this.isDataValid(data)) {
-          data.forEach((hero) => {
+        const { heroes: heroesData, total } = data;
+        if (this.isDataValid(heroesData)) {
+          heroesData.forEach((hero) => {
             hero = new Hero(hero);
             heroes.push(hero);
           });
         }
-        return heroes;
+        return {
+          heroes,
+          total,
+        };
       })
     );
   }

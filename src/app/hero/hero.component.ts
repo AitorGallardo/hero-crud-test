@@ -11,6 +11,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   of,
+  startWith,
   switchMap,
 } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
@@ -44,9 +45,9 @@ export class HeroComponent implements OnInit {
 
   ngOnInit() {
     this.getHeroesByPage();
-    this.initSearchInput().subscribe((filteredHeroes) => {
-      this.heroes = filteredHeroes;
-      this.length = this.heroes.length;
+    this.initSearchInput().subscribe(({heroes,total}) => {
+      this.heroes = heroes;
+      this.length = total;
     });
   }
 
@@ -58,8 +59,8 @@ export class HeroComponent implements OnInit {
   }
 
 
-  getHeroesByName(name: string): Observable<Hero[]> {
-    return this.heroService.getHeroesByName(name);
+  getHeroesByName(name: string): Observable<{heroes: Hero[], total: number}> {
+    return this.heroService.getHeroesByName(name,0,this.pageSize);
   }
 
   getHeroesByPage() {
@@ -128,6 +129,7 @@ export class HeroComponent implements OnInit {
   initSearchInput() {
     return this.searchField.valueChanges.pipe(
       debounceTime(400),
+      // startWith(''),
       distinctUntilChanged(),
       switchMap((value: string) => this.getHeroesByName(value))
     );
