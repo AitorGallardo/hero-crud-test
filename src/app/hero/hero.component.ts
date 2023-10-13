@@ -46,6 +46,7 @@ export class HeroComponent implements OnInit {
     this.getHeroesByPage();
     this.initSearchInput().subscribe((filteredHeroes) => {
       this.heroes = filteredHeroes;
+      this.length = this.heroes.length;
     });
   }
 

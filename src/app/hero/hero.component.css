@@ -1,10 +1,17 @@
 :host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
+  height: 100vh;
 }
 
 .list-item-container {
   display: flex;
   justify-content: space-between;
+}
+mat-list{
+  min-height: 50%;
 }
 
 mat-list-item:hover {
@@ -12,7 +19,7 @@ mat-list-item:hover {
   cursor: pointer;
 }
 
-mat-form-field{
+mat-form-field {
   width: 90%;
 }
 
@@ -20,28 +27,36 @@ mat-form-field{
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
+  margin-bottom: 60px;
 }
 
-.search-add-container mat-form-field{
+.search-add-container mat-form-field {
 }
 
-.search-add-container .button-container{
+.search-add-container .button-container {
   display: flex;
   justify-content: center;
 }
 
-.hero-actions{
+.hero-actions {
   display: flex;
   align-items: center;
   min-width: 100px;
 }
 
-.inline-spinner{
+.inline-spinner {
   flex: 1;
   display: flex;
   justify-content: center;
 }
-.list-item-name{
+.list-item-name {
   display: flex;
   align-items: center;
 }
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+

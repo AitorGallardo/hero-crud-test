@@ -1,45 +1,51 @@
-<section class="search-add-container">
-  <mat-form-field>
-    <mat-label>{{inputPlaceHolder}}</mat-label>
-    <input matInput placeholder="Your name" [formControl]="searchField">
-  </mat-form-field>
-  <div class="button-container">
-    <button (click)="onCreateHero()" mat-icon-button color="primary" aria-label="Add">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-</section>
-
-<mat-list role="list">
-  <div *ngIf="isShowingListSpinner" class="spinner-container">
-    <mat-spinner color="accent" diameter="50" mode="indeterminate"></mat-spinner>
-  </div>
-  <mat-list-item *ngFor="let hero of heroes" role="listitem"
-    >
-    <div class="list-item-container">
-      <span class="list-item-name">{{ hero?.name }}</span>
-      <span class="hero-actions" mat-list-item-secondary>
-        <button mat-icon-button aria-label="Edit" (click)="onEditHero(hero.id)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <ng-container>
-          <div class="inline-spinner"  *ngIf="isShowingSpinnerOnDelete(hero)">
-            <mat-spinner color="accent" diameter="20" mode="indeterminate"></mat-spinner>
-          </div>
-          <button *ngIf="isShowingDeleteIcon(hero)" (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </ng-container>
-      </span>
+<main>
+  <section class="search-add-container">
+    <mat-form-field>
+      <mat-label>{{inputPlaceHolder}}</mat-label>
+      <input matInput placeholder="Your name" [formControl]="searchField">
+    </mat-form-field>
+    <div class="button-container">
+      <button (click)="onCreateHero()" mat-icon-button color="primary" aria-label="Add">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
-  </mat-list-item>
-</mat-list>
+  </section>
+  
+  <mat-list role="list">
+    <div *ngIf="isShowingListSpinner" class="spinner-container">
+      <mat-spinner color="accent" diameter="50" mode="indeterminate"></mat-spinner>
+    </div>
+    <mat-list-item *ngFor="let hero of heroes" role="listitem"
+      >
+      <div class="list-item-container">
+        <span class="list-item-name">{{ hero?.name }}</span>
+        <span class="hero-actions" mat-list-item-secondary>
+          <button mat-icon-button aria-label="Edit" (click)="onEditHero(hero.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <ng-container>
+            <div class="inline-spinner"  *ngIf="isShowingSpinnerOnDelete(hero)">
+              <mat-spinner color="accent" diameter="20" mode="indeterminate"></mat-spinner>
+            </div>
+            <button *ngIf="isShowingDeleteIcon(hero)" (click)="onDeleteHero(hero)" mat-icon-button color="warn" aria-label="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
+        </span>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</main>
 
-<mat-paginator #paginator
-               class="demo-paginator"
-               (page)="handlePageEvent($event)"
-               [length]="length"
-               [pageSize]="pageSize"
-               [pageIndex]="pageIndex"
-               aria-label="Select page">
+<footer>
+  <mat-paginator #paginator
+  class="demo-paginator"
+  (page)="handlePageEvent($event)"
+  [length]="length"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  aria-label="Select page">
 </mat-paginator>
+</footer>
+
+
