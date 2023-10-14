@@ -12,6 +12,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   switchMap,
+  takeWhile,
 } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { PageEvent } from '@angular/material/paginator';
@@ -53,6 +54,10 @@ export class HeroComponent implements OnInit {
     this.initSearchInput().subscribe((data) => {
       this.initData(data);
     });
+  }
+
+  ngOnDestroy() {
+    this.onPagination$.complete();
   }
 
   getHeroesByName(name: string): Observable<{ heroes: Hero[]; total: number }> {
@@ -117,6 +122,7 @@ export class HeroComponent implements OnInit {
 
   initSearchInput() {
     return this.searchField.valueChanges.pipe(
+      takeWhile(_ => this.onPagination$.observed),
       debounceTime(400),
       distinctUntilChanged(),
       switchMap((value: string) => this.getHeroesByName(value))
